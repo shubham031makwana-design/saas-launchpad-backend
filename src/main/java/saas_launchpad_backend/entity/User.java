@@ -16,16 +16,21 @@ public class User {
 
     private String password;
 
-    // Each User belongs to one Tenant
+    // Each USER can belong to one Tenant.
+    // ADMIN users can have no tenant.
     @ManyToOne
-    @JoinColumn(name = "tenant_id")
+    @JoinColumn(name = "tenant_id", nullable = true)
     private Tenant tenant;
 
     @Column(nullable = false)
-private String role = "USER";
+    private String role = "USER";
 
     public User() {
     }
+
+    // ==============================
+    // ID
+    // ==============================
 
     public Long getId() {
         return id;
@@ -35,6 +40,10 @@ private String role = "USER";
         this.id = id;
     }
 
+    // ==============================
+    // FULL NAME
+    // ==============================
+
     public String getFullName() {
         return fullName;
     }
@@ -42,6 +51,10 @@ private String role = "USER";
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
+
+    // ==============================
+    // EMAIL
+    // ==============================
 
     public String getEmail() {
         return email;
@@ -51,6 +64,10 @@ private String role = "USER";
         this.email = email;
     }
 
+    // ==============================
+    // PASSWORD
+    // ==============================
+
     public String getPassword() {
         return password;
     }
@@ -59,6 +76,10 @@ private String role = "USER";
         this.password = password;
     }
 
+    // ==============================
+    // TENANT
+    // ==============================
+
     public Tenant getTenant() {
         return tenant;
     }
@@ -66,11 +87,16 @@ private String role = "USER";
     public void setTenant(Tenant tenant) {
         this.tenant = tenant;
     }
-    public String getRole() {
-    return role;
-}
 
-public void setRole(String role) {
-    this.role = role;
-}
+    // ==============================
+    // ROLE
+    // ==============================
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 }

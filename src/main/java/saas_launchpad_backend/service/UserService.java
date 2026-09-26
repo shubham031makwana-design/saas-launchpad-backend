@@ -54,14 +54,39 @@ public class UserService {
                 passwordEncoder.encode(request.getPassword())
         );
 
-        Optional<Tenant> optionalTenant =
-                tenantRepository.findById(request.getTenantId());
+        String role = request.getRole();
 
-        if (optionalTenant.isEmpty()) {
-            throw new RuntimeException("Tenant not found");
+        if (role == null || role.trim().isEmpty()) {
+            role = "USER";
         }
 
-        user.setTenant(optionalTenant.get());
+        role = role.toUpperCase();
+
+        user.setRole(role);
+
+        // ADMIN users do not require a tenant.
+        if ("ADMIN".equals(role)) {
+
+            user.setTenant(null);
+
+        } else {
+
+            // Normal USER must belong to a tenant.
+            if (request.getTenantId() == null) {
+                throw new RuntimeException(
+                        "Tenant ID is required for USER"
+                );
+            }
+
+            Optional<Tenant> optionalTenant =
+                    tenantRepository.findById(request.getTenantId());
+
+            if (optionalTenant.isEmpty()) {
+                throw new RuntimeException("Tenant not found");
+            }
+
+            user.setTenant(optionalTenant.get());
+        }
 
         User savedUser = userRepository.save(user);
 
@@ -269,11 +294,9 @@ public class UserService {
             return new LoginResponseDTO("Tenant is inactive");
         }
 
-        /*
-         * Generate JWT containing:
-         * - email
-         * - role
-         */
+        // Generate JWT containing:
+        // email
+        // role
         String token =
                 jwtUtil.generateToken(
                         user.getEmail(),

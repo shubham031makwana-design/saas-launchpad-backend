@@ -6,6 +6,7 @@ public class UserRequestDTO {
     private String email;
     private String password;
     private Long tenantId;
+    private String role;
 
     public UserRequestDTO() {
     }
@@ -40,5 +41,13 @@ public class UserRequestDTO {
 
     public void setTenantId(Long tenantId) {
         this.tenantId = tenantId;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
